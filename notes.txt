@@ -1,0 +1,70 @@
+* = list of 0 or more
++ = list of 1 or more
+? = optional, 0 or 1
+
+Basic Definitions
+
+  SourceCharacter :: /[\u0009\u000A\u000D\u0020-\uFFFF]/
+  UnicodeBOM :: Byte Order Mark (U+FEFF) (unicode chars may appear in StringValue and Comment portions)
+  WhiteSpace :: Horizontal Tab (U+0009) or Space (U+0020)
+  LineTerminator :: New Line (U+000A) or Carriage Return (U+000D)New Line (U+000A) or Carriage Return (U+000D)New Line (U+000A)
+  Comment :: #CommentChar*
+  CommentChar :: SourceCharacter but not LineTerminator
+  Comma :: ,
+  Token :: Punctuator or Name or IntValue or FloatValue or StringValue (lexical token)
+  Ignored :: UnicodeBOM or WhiteSpace or LineTerminator or Comment or Comma (ignored tokens, may appear in any quantity before or after any lexical token)
+  Punctuator :: ! $ ( ) ... : = @ [ ] { | }
+  Name :: /[_A-Za-z][_0-9A-Za-z]*/ (case sensitive, limited to ASCII)
+
+Documents
+
+  Document :: Definition+
+  Definition :: OperationDefinition or FragmentDefinition (If a document contains only one operation, that operation may be unnamed or represented in the shorthand form, which omits both the query keyword and operation name. Otherwise, if a GraphQL query document contains multiple operations, each operation must be named. When submitting a query document with multiple operations to a GraphQL service, the name of the desired operation to be executed must also be provided.)
+
+Operations
+
+  There are two kinds of operations, queries (read only) and mutations (write followed by read)
+
+  OperationDefinition :: OperationType Name? VariableDefinitions? Directives? SelectionSet
+                         OR just SelectionSet for shorthand, but only if document contains just one definition
+  OperationType :: `query` or `mutation`.
+
+Selection Sets
+
+  SelectionSet :: { Selection+ }
+  Selection :: Field or FragementSpread or InlineFragment
+  Field :: Alias? Name Arguments? Directives? SelectionSet?
+  Alias :: Name :
+
+Arguments
+
+  Arguments are unordered.
+
+  Arguments :: ( Argument+ )
+  Argument :: Name : Value
+
+Fragments
+
+  FragmentSpread :: `...` FragmentName Directives?
+  FragmentDefinition :: `fragment` FragmentName TypeCondition Directives? SelectionSet
+  FragmentName :: Name but not `on`
+  TypeCondition :: `on` NamedType
+  InlineFragment :: `...` TypeCondition? Directives? SelectionSet
+
+Input Values
+
+  Value :: Variable or IntValue or FloatValue or StringValue or BooleanValue or EnumValue or ListValue or ObjectValue
+  TODO something about constant values
+
+  IntValue:: IntegerPart
+  IntegerPart :: NegativeSign? `0`
+                 OR NegativeSign? NonZeroDigit Digit*
+  NegativeSign :: -
+  Digit :: one of 0-9
+  NonZeroDigit:: Digit but not 0
+
+  FloatValue :: IntegerPart FractionalPart
+                OR IntegerPart ExponentPart
+                OR IntegerPart FractionalPart ExponentPart
+  FractionalPart :: `.` Digit+
+  ExponentPart :: ExponentIndicator S
