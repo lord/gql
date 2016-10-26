@@ -59,7 +59,7 @@ named!(punctuator<&str, Token>, chain!(
   ||{Token::Punctuator(punc.chars().nth(0).unwrap())}
 ));
 named!(name<&str, Token>, chain!(
-  first: take_while_s!(name_first_char) ~
+  first: take_while1_s!(name_first_char) ~
   rest: take_while_s!(name_char) ,
   || {Token::Name(format!("{}{}", first, rest))}
 ));
@@ -88,13 +88,25 @@ named!(string_value<&str, Token>, chain!(
   tag_s!("\"") ,
   || {Token::StringValue(contents.to_string())}
 ));
+named!(token<&str, Token>, alt_complete!(
+  punctuator |
+  name |
+  int_value |
+  float_value |
+  string_value
+));
+named!(tokens< &str, Vec<Token> >, many0!(delimited!(
+  many_ignored,
+  token,
+  many_ignored
+)));
 
 #[cfg(test)]
 mod tests {
-    use super::string_value;
+    use super::tokens;
     #[test]
     fn it_works() {
-      println!("{:?}", string_value(&"\"m\\re\\\"ow\"".to_string()));
+      println!("{:?}", tokens(&"123 \n \"m\\re\\\"ow\"".to_string()));
       assert!(false)
     }
 }
