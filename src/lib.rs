@@ -70,13 +70,23 @@ named!(int_value<&str, Token>, chain!(
   num: integer_part ,
   || {Token::IntValue(num.parse::<i64>().unwrap())} // TODO REMOVE UNWRAP
 ));
+named!(float_value<&str, Token>, chain!(
+  i_part: integer_part ~
+  f_part: fractional_part? ~
+  e_part: exponent_part? ,
+  || {
+    Token::FloatValue(
+      format!("{}{}{}", i_part, f_part.unwrap_or(""), e_part.unwrap_or(""))
+        .parse::<f64>().unwrap())
+    } // TODO REMOVE UNWRAP
+));
 
 #[cfg(test)]
 mod tests {
-    use super::int_value;
+    use super::float_value;
     #[test]
     fn it_works() {
-      println!("{:?}", int_value(&"123".to_string()));
+      println!("{:?}", float_value(&"123.01".to_string()));
       assert!(false)
     }
 }
