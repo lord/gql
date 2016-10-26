@@ -4,4 +4,8 @@ version = "0.1.0"
 authors = ["Robert Lord <robert@lord.io>"]
 
 [dependencies]
-nom = "^1.2.4"
+regex = "*"
+
+  [dependencies.nom]
+  version = "^1.2.4"
+  features = ["regexp"]

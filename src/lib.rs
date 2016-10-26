@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate nom;
+extern crate regex;
 
 #[derive(Debug)]
 enum Token {
@@ -62,13 +63,20 @@ named!(name<&str, Token>, chain!(
   rest: take_while_s!(name_char) ,
   || {Token::Name(format!("{}{}", first, rest))}
 ));
+named!(integer_part<&str, &str>, re_find!("-?(?:0|(?:[1-9][0-9]*))"));
+named!(fractional_part<&str, &str>, re_find!("\\.[0-9]+"));
+named!(exponent_part<&str, &str>, re_find!("[eE][+-]?[0-9]+"));
+named!(int_value<&str, Token>, chain!(
+  num: integer_part ,
+  || {Token::IntValue(num.parse::<i64>().unwrap())} // TODO REMOVE UNWRAP
+));
 
 #[cfg(test)]
 mod tests {
-    use super::name;
+    use super::int_value;
     #[test]
     fn it_works() {
-      println!("{:?}", name(&"uentha1298ueto_uentoh".to_string()));
+      println!("{:?}", int_value(&"123".to_string()));
       assert!(false)
     }
 }
