@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate nom;
 
-// Ignored tokens
+// Ignored Tokens
 fn line_terminator_char(x: char) -> bool {
   x == '\u{000D}' || x == '\u{000A}'
 }
@@ -21,8 +21,9 @@ named!(ignored<&str, &str>, alt_complete!(
   line_terminator |
   comment |
   comma));
-// named!(letter, tag!("meow"));
-// named!(parens< &[u8], Vec<&[u8]> >, delimited!(char!('('), many0!(letter), char!(')')));
+named!(many_ignored<&str, Vec<&str> >, many0!(ignored));
+
+// Lexical Tokens
 
 #[cfg(test)]
 mod tests {
