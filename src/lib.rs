@@ -9,7 +9,7 @@ mod tests {
     use super::lexer;
     #[test]
     fn it_works() {
-      println!("{:?}", lexer::lex(&"123 \n \"m\\re\\\"ow\"".to_string()));
+      println!("{:?}", lexer::lex(include_str!("blah.graphql")));
       assert!(false)
     }
 }

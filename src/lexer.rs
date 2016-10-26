@@ -40,7 +40,7 @@ fn name_char(x: char) -> bool {
 fn name_first_char(x: char) -> bool {
   x.is_alphabetic() || x == '_'
 }
-named!(punctuator_str<&str, &str>, alt!(
+named!(punctuator_str<&str, &str>, alt_complete!(
   tag_s!("!") |
   tag_s!("$") |
   tag_s!("(") |
