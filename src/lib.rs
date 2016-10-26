@@ -63,9 +63,9 @@ named!(name<&str, Token>, chain!(
   rest: take_while_s!(name_char) ,
   || {Token::Name(format!("{}{}", first, rest))}
 ));
-named!(integer_part<&str, &str>, re_find!("-?(?:0|(?:[1-9][0-9]*))"));
-named!(fractional_part<&str, &str>, re_find!("\\.[0-9]+"));
-named!(exponent_part<&str, &str>, re_find!("[eE][+-]?[0-9]+"));
+named!(integer_part<&str, &str>, re_find!("^-?(?:0|(?:[1-9][0-9]*))"));
+named!(fractional_part<&str, &str>, re_find!("^\\.[0-9]+"));
+named!(exponent_part<&str, &str>, re_find!("^[eE][+-]?[0-9]+"));
 named!(int_value<&str, Token>, chain!(
   num: integer_part ,
   || {Token::IntValue(num.parse::<i64>().unwrap())} // TODO REMOVE UNWRAP
@@ -86,7 +86,7 @@ mod tests {
     use super::float_value;
     #[test]
     fn it_works() {
-      println!("{:?}", float_value(&"123.01".to_string()));
+      println!("{:?}", float_value(&"123.01foo".to_string()));
       assert!(false)
     }
 }
