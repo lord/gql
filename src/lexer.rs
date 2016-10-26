@@ -1,7 +1,3 @@
-#[macro_use]
-use nom;
-use regex;
-
 #[derive(Debug)]
 pub enum Token {
   Punctuator(char),
