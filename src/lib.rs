@@ -80,13 +80,21 @@ named!(float_value<&str, Token>, chain!(
         .parse::<f64>().unwrap())
     } // TODO REMOVE UNWRAP
 ));
+named!(string_contents<&str, &str>,
+  re_find!("^(?:(?:\\\\u[0-9A-Fa-f]{4})|(?:\\\\[\"\\\\/bfnrt])|(?:[^\"\\n\\r\\\\]))*"));
+named!(string_value<&str, Token>, chain!(
+  tag_s!("\"") ~
+  contents: string_contents ~
+  tag_s!("\"") ,
+  || {Token::StringValue(contents.to_string())}
+));
 
 #[cfg(test)]
 mod tests {
-    use super::float_value;
+    use super::string_value;
     #[test]
     fn it_works() {
-      println!("{:?}", float_value(&"123.01foo".to_string()));
+      println!("{:?}", string_value(&"\"m\\re\\\"ow\"".to_string()));
       assert!(false)
     }
 }
