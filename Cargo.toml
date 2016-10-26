@@ -2,6 +2,10 @@
 name = "gql"
 version = "0.1.0"
 authors = ["Robert Lord <robert@lord.io>"]
+description = "A GraphQL lexer (and future parser)"
+repository = "https://github.com/lord/gql"
+readme = "readme.md"
+license = "MIT"
 
 [dependencies]
 regex = "^0.1.77"
